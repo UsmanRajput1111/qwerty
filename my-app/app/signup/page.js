@@ -23,17 +23,11 @@ export default function SignupPage() {
 
     // Custom logic for phone number
     if (name === "phone") {
-      // Ensure it always starts with +92
       let formattedValue = value.startsWith("+92") ? value : "+92";
-
-      // Remove any non-digit characters after +92
       formattedValue = "+92" + formattedValue.slice(3).replace(/\D/g, "");
-
-      // Limit total length to +92 + 10 digits
       if (formattedValue.length > 13) {
         formattedValue = formattedValue.slice(0, 13);
       }
-
       setFormData((prev) => ({ ...prev, phone: formattedValue }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
@@ -92,7 +86,9 @@ export default function SignupPage() {
         <h2 className="text-2xl font-bold text-center mb-6">
           Create Your Account
         </h2>
+
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Full Name */}
           <div>
             <label className="block text-gray-700">Full Name</label>
             <input
@@ -103,6 +99,8 @@ export default function SignupPage() {
               required
             />
           </div>
+
+          {/* Email */}
           <div>
             <label className="block text-gray-700">Email</label>
             <input
@@ -113,20 +111,37 @@ export default function SignupPage() {
               required
             />
           </div>
+
+          {/* Phone Number with Flag and +92 */}
           <div>
             <label className="block text-gray-700">Phone Number</label>
-            <input
-              type="tel"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border rounded-lg"
-              required
-            />
-            <p className="text-sm text-gray-500 mt-1">
-              Format: +92XXXXXXXXXX (10 digits)
-            </p>
+            <div className="flex items-center border rounded-lg overflow-hidden">
+              <div className="flex items-center bg-gray-100 px-3">
+                <img
+                  src="/pk-flag.png" // 🟢 replace this with your actual flag image path
+                  alt="Pakistan Flag"
+                  className="w-5 h-5 mr-2"
+                />
+                <span className="text-gray-700 font-medium">+92</span>
+              </div>
+              <input
+                type="tel"
+                name="phone"
+                value={formData.phone.slice(3)} // only digits shown
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    phone: "+92" + e.target.value.replace(/\D/g, "").slice(0, 10),
+                  }))
+                }
+                className="flex-1 px-3 py-2 outline-none"
+                placeholder="XXXXXXXXXX"
+                required
+              />
+            </div>
           </div>
+
+          {/* Password */}
           <div>
             <label className="block text-gray-700">Password</label>
             <input
@@ -137,6 +152,8 @@ export default function SignupPage() {
               required
             />
           </div>
+
+          {/* Confirm Password */}
           <div>
             <label className="block text-gray-700">Confirm Password</label>
             <input
@@ -147,6 +164,8 @@ export default function SignupPage() {
               required
             />
           </div>
+
+          {/* Role */}
           <div>
             <label className="block text-gray-700">I am a:</label>
             <select
@@ -160,6 +179,7 @@ export default function SignupPage() {
             </select>
           </div>
 
+          {/* Technician Expertise */}
           {formData.role === "technician" && (
             <div className="transition-all duration-300">
               <label className="block text-gray-700">Select Expertise:</label>
@@ -182,6 +202,7 @@ export default function SignupPage() {
             </div>
           )}
 
+          {/* Submit Button */}
           <button
             type="submit"
             className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-all"
@@ -189,6 +210,7 @@ export default function SignupPage() {
             Sign Up
           </button>
         </form>
+
         <p className="text-center mt-4">
           Already have an account?{" "}
           <Link href="/login" className="text-blue-500">
